@@ -24,7 +24,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/standalone-universal",
+            "outputPath": "dist/standalone-universal/browser",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": [
@@ -104,6 +104,60 @@
             ],
             "scripts": []
           }
+        },
+        "server": {
+          "builder": "@angular-devkit/build-angular:server",
+          "options": {
+            "outputPath": "dist/standalone-universal/server",
+            "main": "server.ts",
+            "tsConfig": "tsconfig.server.json",
+            "inlineStyleLanguage": "scss"
+          },
+          "configurations": {
+            "production": {
+              "outputHashing": "media"
+            },
+            "development": {
+              "optimization": false,
+              "sourceMap": true,
+              "extractLicenses": false,
+              "vendorChunk": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve-ssr": {
+          "builder": "@nguniversal/builders:ssr-dev-server",
+          "configurations": {
+            "development": {
+              "browserTarget": "standalone-universal:build:development",
+              "serverTarget": "standalone-universal:server:development"
+            },
+            "production": {
+              "browserTarget": "standalone-universal:build:production",
+              "serverTarget": "standalone-universal:server:production"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "prerender": {
+          "builder": "@nguniversal/builders:prerender",
+          "options": {
+            "routes": [
+              "/"
+            ]
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "standalone-universal:build:production",
+              "serverTarget": "standalone-universal:server:production"
+            },
+            "development": {
+              "browserTarget": "standalone-universal:build:development",
+              "serverTarget": "standalone-universal:server:development"
+            }
+          },
+          "defaultConfiguration": "production"
         }
       }
     }
